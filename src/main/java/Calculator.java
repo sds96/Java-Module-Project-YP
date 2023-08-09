@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Calculator {
     int numberOfPeople = 1;
-    String allPurchasees = "";
+    StringBuilder allPurchasees = new StringBuilder();
     double totalSum = 0;
     public void readInputParameters(){
         Scanner scanner = new Scanner(System.in);
@@ -53,7 +53,7 @@ public class Calculator {
             // этот nextLine съедает остатки после nextDouble.
             scanner.nextLine();
             totalSum += value;
-            allPurchasees = allPurchasees.concat(String.format("\n%s %.2f", name, value));
+            allPurchasees.append(String.format("\n%s %.2f", name, value));
 
             System.out.println(String.format("Товар %s со стоимостью %.2f успешно добавлен.", name, value));
         }
