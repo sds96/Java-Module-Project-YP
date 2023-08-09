@@ -8,9 +8,9 @@ public class Calculator {
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("Введите количество человек: ");
-            try {
+            if (scanner.hasNextInt()){
                 numberOfPeople = scanner.nextInt();
-            } catch (Exception e) {
+            } else {
                 System.out.println("Получена ошибка ввода. Введите число.");
                 scanner.next();
                 continue;
@@ -30,21 +30,28 @@ public class Calculator {
         System.out.println("Давайте добавим ваши товары.");
         while(true){
             System.out.println("Введите название товара или 'Завершить' если вы закончили.");
-            String name = scanner.next();
+            String name = scanner.nextLine();
             if (name.equalsIgnoreCase("Завершить")){
                 break;
             }
             double value;
             while (true){
                 System.out.println("Введите стоимость " + name + ":");
-                value = scanner.nextDouble();
-                if (value < 0){
-                    System.out.println("Стоимость товара не может быть отрицательной.");
-                } else {
-                    break;
+                if(scanner.hasNextDouble()) {
+                    value = scanner.nextDouble();
+                    if (value < 0){
+                        System.out.println("Стоимость товара не может быть отрицательной.");
+                    } else {
+                        break; // всё ок, выходим из цикла
+                    }
+                } else{
+                    scanner.nextLine();
+                    System.out.println("Стоимость товара должна быть числом.");
                 }
             }
-
+            // после чтения double в буфере остаётся \n и nextLine в цикле для названия товара кушает пустую строку автоматом.
+            // этот nextLine съедает остатки после nextDouble.
+            scanner.nextLine();
             totalSum += value;
             allPurchasees = allPurchasees.concat(String.format("\n%s %.2f", name, value));
 
@@ -56,13 +63,16 @@ public class Calculator {
         System.out.println("Добавленные товары:" + allPurchasees);
         System.out.println(String.format("Итоговая стоимость: %.2f", totalSum));
         double pricePerPerson = totalSum /numberOfPeople;
-        System.out.println(String.format("Каждый гость должен заплатить %.2f %s", pricePerPerson, getPadezh(pricePerPerson)) );
+        System.out.println(String.format("Каждый гость должен заплатить %.2f %s", pricePerPerson, getEnding(pricePerPerson)) );
     }
 
-    String getPadezh(double d){
+    String getEnding(double d){
         String ret;
+        int tens = ((int)d) % 100;
         int last = ((int)d)% 10;
-        if (last == 1){
+        if (tens > 10 && tens <20){
+            ret = "рублей";
+        } else if (last == 1){
             ret = "рубль";
         } else if (last == 2 || last == 3 || last == 4){
             ret = "рубля";
